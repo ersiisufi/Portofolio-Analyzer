@@ -1,31 +1,30 @@
-import os
+from pathlib import Path
 import logging
+import os
 
-def setup_logging(log_dir: str = "../logs", log_level=logging.INFO):
-    """
-    Sets up system-wide logging to both console and a log file.
-    """
-    os.makedirs(log_dir, exist_ok=True)
-    log_filepath = os.path.join(log_dir, "portfolio_analyzer.log")
-    
-    # Create a root logger
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+def setup_logging(log_level=logging.INFO):
+    log_dir = PROJECT_ROOT / "logs"
+    log_dir.mkdir(exist_ok=True)
+
+    log_filepath = log_dir / "portfolio_analyzer.log"
+
     logger = logging.getLogger()
     logger.setLevel(log_level)
-    
-    # Avoid duplicate handlers if the logger is initialized multiple times in notebooks
+
     if logger.handlers:
         return logger
 
-    # Log format: Timestamp [Level] Module: Message
-    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(module)s: %(message)s', 
-                                  datefmt='%Y-%m-%d %H:%M:%S')
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)s] %(module)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
 
-    # 1. File Handler (Writes everything to disk)
     file_handler = logging.FileHandler(log_filepath)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 
-    # 2. Stream Handler (Prints out to console/terminal)
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)

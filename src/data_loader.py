@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class FinancialDataLoader:
     """
-    A professional-grade utility to fetch, validate, and store 
+    Utility to fetch, validate, and store 
     historical financial asset data from Yahoo Finance.
     """
     def __init__(self, data_dir: str = "../data/raw"):
@@ -20,6 +20,7 @@ class FinancialDataLoader:
         tickers: List[str], 
         start_date: str, 
         end_date: str
+
     ) -> pd.DataFrame:
         """
         Fetches Adjusted Close prices for a list of tickers.
@@ -41,7 +42,8 @@ class FinancialDataLoader:
         logger.info(f"Initiating market data download for tickers: {tickers} from {start_date} to {end_date}")        
         try:
             # We download Adjusted Close to properly account for dividends and stock splits
-            data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
+            data = yf.download(tickers, start=start_date, end=end_date)['Close']
+            print(data.columns)
             
             # Handle the edge case of a single ticker returning a Series instead of a DataFrame
             if isinstance(data, pd.Series):
