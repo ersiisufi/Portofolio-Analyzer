@@ -2,6 +2,7 @@ from pathlib import Path
 import logging
 import os
 
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def setup_logging(log_level=logging.INFO):
@@ -13,14 +14,16 @@ def setup_logging(log_level=logging.INFO):
     logger = logging.getLogger()
     logger.setLevel(log_level)
 
-    if logger.handlers:
-        return logger
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
 
     formatter = logging.Formatter(
         '%(asctime)s [%(levelname)s] %(module)s: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
 
+    print(f"Writing logs to: {log_filepath}")
+    
     file_handler = logging.FileHandler(log_filepath)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
