@@ -3,6 +3,7 @@ import pandas as pd
 import yfinance as yf
 from typing import List, Optional
 import logging
+from src.conifg import RAW_DATA_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,7 @@ class FinancialDataLoader:
     Utility to fetch, validate, and store 
     historical financial asset data from Yahoo Finance.
     """
-    def __init__(self, data_dir: str = "../data/raw"):
+    def __init__(self, data_dir: str = RAW_DATA_DIR):
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
 

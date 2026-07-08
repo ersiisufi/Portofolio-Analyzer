@@ -1,6 +1,7 @@
 from pathlib import Path
 import logging
 import os
+from src.conifg import LOG_DIR
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -9,7 +10,7 @@ def setup_logging(log_level=logging.INFO):
     log_dir = PROJECT_ROOT / "logs"
     log_dir.mkdir(exist_ok=True)
 
-    log_filepath = log_dir / "portfolio_analyzer.log"
+    log_filepath = LOG_DIR
 
     logger = logging.getLogger()
     logger.setLevel(log_level)
@@ -23,7 +24,7 @@ def setup_logging(log_level=logging.INFO):
     )
 
     print(f"Writing logs to: {log_filepath}")
-    
+
     file_handler = logging.FileHandler(log_filepath)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
