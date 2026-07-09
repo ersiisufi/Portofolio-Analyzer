@@ -1,16 +1,17 @@
 from pathlib import Path
 import logging
 import os
-from src.conifg import LOG_DIR
+from src.conifg import LOG_DIR, PROJECT_ROOT
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
 
 def setup_logging(log_level=logging.INFO):
-    log_dir = PROJECT_ROOT / "logs"
-    log_dir.mkdir(exist_ok=True)
 
-    log_filepath = LOG_DIR
+    LOG_DIR.mkdir(exist_ok=True)
+
+    log_filepath = LOG_DIR / "portfolio_analyzer.log"
 
     logger = logging.getLogger()
     logger.setLevel(log_level)

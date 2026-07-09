@@ -1,9 +1,11 @@
 # src/visualization.py
-import os
 import logging
+from pathlib import Path
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+from src.conifg import IMAGE_DIR, REPORT_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -12,9 +14,9 @@ class FinancialVisualizer:
     Generates professional-grade charts for financial data.
     Ensures charts are automatically saved down to the images/ or reports/ directory.
     """
-    def __init__(self, output_dir: str = "../images"):
-        self.output_dir = output_dir
-        os.makedirs(self.output_dir, exist_ok=True)
+    def __init__(self, output_dir = IMAGE_DIR):
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         # Apply professional chart stylings globally
         plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 
@@ -35,7 +37,7 @@ class FinancialVisualizer:
         plt.title("Portfolio Asset Correlation Matrix", fontsize=14, fontweight='bold', pad=15)
         plt.tight_layout()
         
-        filepath = os.path.join(self.output_dir, filename)
+        filepath = self.output_dir / filename
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Correlation heatmap exported to: {filepath}")
@@ -54,7 +56,7 @@ class FinancialVisualizer:
         plt.legend(loc="upper right")
         plt.tight_layout()
         
-        filepath = os.path.join(self.output_dir, filename)
+        filepath = self.output_dir / filename
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Return distributions chart exported to: {filepath}")
