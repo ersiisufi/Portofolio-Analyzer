@@ -1,6 +1,7 @@
 # src/visualization.py
 import logging
 from pathlib import Path
+import os
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -60,3 +61,31 @@ class FinancialVisualizer:
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Return distributions chart exported to: {filepath}")
+        
+    def plot_portfolio_drawdowns(self, price_df: pd.DataFrame, filename: str = "asset_drawdowns.png") -> None:
+        """
+        Computes and plots historical underwater drawdown curves for all assets.
+        """
+        logger.info("Generating historical drawdown curve charts.")
+        
+        plt.figure(figsize=(12, 6))
+        
+        # Calculate individual drawdown time series
+        rolling_peaks = price_df.cummax()
+        drawdown_series = (price_df - rolling_peaks) / rolling_peaks
+        
+        # Plot each asset path
+        for col in drawdown_series.columns:
+            plt.plot(drawdown_series.index, drawdown_series[col], label=col, linewidth=1.5)
+            
+        plt.title("Historical Asset Drawdown Comparison (Underwater Plot)", fontsize=14, fontweight='bold', pad=15)
+        plt.xlabel("Date")
+        plt.ylabel("Drawdown (%)")
+        plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y*100:.0f}%'))
+        plt.legend(loc="lower left")
+        plt.tight_layout()
+        
+        filepath = os.path.join(self.output_dir, filename)
+        plt.savefig(filepath, dpi=300)
+        plt.close()
+        logger.info(f"Drawdown charts successfully exported to: {filepath}")
