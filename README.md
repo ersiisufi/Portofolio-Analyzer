@@ -1,4 +1,4 @@
-
+# Quantitative Portfolio & Risk Analyzer
 ### An End-to-End Econometric & Stochastic Risk Management Architecture (2016 - 2026)
 
 ---
