@@ -61,7 +61,7 @@ class FinancialVisualizer:
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Return distributions chart exported to: {filepath}")
-        
+
     def plot_portfolio_drawdowns(self, price_df: pd.DataFrame, filename: str = "asset_drawdowns.png") -> None:
         """
         Computes and plots historical underwater drawdown curves for all assets.
@@ -89,3 +89,52 @@ class FinancialVisualizer:
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Drawdown charts successfully exported to: {filepath}")
+    
+    def plot_efficient_frontier(
+        self, 
+        sim_metrics: np.ndarray, 
+        max_sharpe_point: tuple, 
+        min_var_point: tuple, 
+        filename: str = "efficient_frontier.png"
+    ) -> None:
+        """
+        Plots the Efficient Frontier scatter map of random portfolios 
+        and marks the specific locations of the optimal strategies.
+        """
+        logger.info("Generating Efficient Frontier scatter visualization.")
+        
+        plt.figure(figsize=(10, 6))
+        
+        # Extract simulated arrays
+        # sim_metrics[1, :] is volatility (X-axis), sim_metrics[0, :] is return (Y-axis)
+        sc = plt.scatter(
+            sim_metrics[1, :], 
+            sim_metrics[0, :], 
+            c=sim_metrics[2, :], 
+            cmap='viridis', 
+            marker='o', 
+            s=4, 
+            alpha=0.4
+        )
+        
+        # Mark Max Sharpe Portfolio (Red Star)
+        plt.scatter(max_sharpe_point[1], max_sharpe_point[0], color='red', marker='*', s=200, label='Max Sharpe Ratio')
+        
+        # Mark Min Variance Portfolio (Blue Star)
+        plt.scatter(min_var_point[1], min_var_point[0], color='blue', marker='*', s=200, label='Minimum Variance')
+        
+        plt.title("Efficient Frontier & Optimal Asset Allocations", fontsize=14, fontweight='bold', pad=15)
+        plt.xlabel("Annualized Volatility (Risk)", fontsize=11)
+        plt.ylabel("Annualized Expected Return", fontsize=11)
+        
+        # Add a sleek colorbar to show Sharpe Ratio values
+        cbar = plt.colorbar(sc)
+        cbar.set_label('Sharpe Ratio', rotation=270, labelpad=15)
+        
+        plt.legend(loc='upper left', frameon=True, facecolor='white')
+        plt.tight_layout()
+        
+        filepath = os.path.join(self.output_dir, filename)
+        plt.savefig(filepath, dpi=300)
+        plt.close()
+        logger.info(f"Efficient Frontier plot exported successfully to: {filepath}")
