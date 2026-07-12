@@ -6,6 +6,7 @@ import os
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from src.conifg import IMAGE_DIR, REPORT_DIR
 
 logger = logging.getLogger(__name__)
