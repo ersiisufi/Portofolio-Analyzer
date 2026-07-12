@@ -139,3 +139,31 @@ class FinancialVisualizer:
         plt.savefig(filepath, dpi=300)
         plt.close()
         logger.info(f"Efficient Frontier plot exported successfully to: {filepath}")
+    
+    def plot_monte_carlo_results(self, paths: np.ndarray, filename: str = "monte_carlo_simulation.png") -> None:
+        """
+        Plots simulated portfolio pricing paths and highlights structural trajectory bands.
+        """
+        logger.info("Generating Monte Carlo visualization layout.")
+        
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5), gridspec_kw={'width_ratios': [2, 1]})
+        
+        # 1. Timeline Chart (Plot first 150 lines to prevent canvas congestion)
+        days = paths.shape[0]
+        for i in range(min(150, paths.shape[1])):
+            axes[0].plot(paths[:, i], linewidth=0.5, alpha=0.5)
+        axes[0].set_title("Simulated Portfolio Price Paths (GBM)", fontsize=12, fontweight='bold')
+        axes[0].set_xlabel("Trading Days Ahead")
+        axes[0].set_ylabel("Portfolio Value ($)")
+        
+        # 2. Terminal Value Histogram Distribution
+        terminal_vals = paths[-1, :]
+        axes[1].hist(terminal_vals, bins=50, orientation='horizontal', color='teal', alpha=0.7, edgecolor='black')
+        axes[1].set_title("Terminal Value Distribution", fontsize=12, fontweight='bold')
+        axes[1].set_xlabel("Frequency Encountered")
+        
+        plt.tight_layout()
+        filepath = os.path.join(self.output_dir, filename)
+        plt.savefig(filepath, dpi=300)
+        plt.close()
+        logger.info(f"Monte Carlo simulation chart exported to: {filepath}")
