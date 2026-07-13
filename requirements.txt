@@ -4,3 +4,8 @@ scikit-learn
 matplotlib
 seaborn
 yfinance
+fastapi
+uvicorn
+pydantic
+streamlit
+plotly
